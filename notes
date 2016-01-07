@@ -1,0 +1,128 @@
+Sudoku puzzle solver
+
+These are the notes for the Sudoku puzzle live stream at twitch.tv/bramblethorn.  This project and stream is about the process as well as the final result so we will be starting with the very basic assumption and algorithm I came up with and refining it in steps.
+
+All source code is protected by the MIT open license.  
+
+So this project is to come up with, from scratch (meaning not looking at source code from similar projects) an algorithm to solve Sudoku puzzles.  The basic idea is that we will allow every cell in a puzzle to start with the possibility of being 1-9.  as fixed numbers appear in cells we will remove those possibilities from cells sharing their Row, Column, or Block.  This will require 4 data structures to hold the information we need.
+
+1.) Cells -> a dictionary of Vectors.  The keys will be 11-99 skipping numbers 10, 20, ... 90.  the Values will be vectors holding numbers 1-9 that are removed until 1 number is left, that will be the number the cell must hold in the completed puzzle.
+2.) Rows -> dictionary of vectors.  The keys will be 1-9, the values will be vectors holding the numbers 1-9.  once a Cell is confirmed to have a specific number the number will be add to it's Rows vector to represent a number that no other Cell in the row can hold.
+3.)Cols -> dictionary of vectors.  The keys will be 10, 20, ... 90, the values will be vectors holding the numbers 1-9.  once a Cell is confirmed to have a specific number the number will be add to it's Cols vector to represent a number that no other Cell in the column can hold.
+4.)Blocks -> dictionary of vectors that will represent the 9 blocks of 9 squares in a Sudoku puzzle.  The keys will be 1-9 (left to right top to bottom) the values will be vectors holding the numbers 1-9.  once a Cell is confirmed to have a specific number the number will be add to it's Blocks vector to represent a number that no other Cell in the block can hold.
+
+So the algorithm will look roughly like this.
+1st (naive) approach
+
+Start). Initialize Cells with all vectors filled 1-9.  Initialize Rows, Cols, Blocks with all vectors empty.  
+1.) read in initial inputs for each cell and remove all extra numbers from those cells vectors so they are length 1 containing the appropriate number.
+2.) start main loop
+    a.) start row loop (for each row)
+        1.) check that all cells with length 1 have their value in the Rows dictionary
+        2.) check that all cells do not contain numbers in their Rows dictionary
+    b.) start column loop (for each column)
+        1.) check that all cells with length 1 have their value in the Cells dictionary
+        2.) check that all cells do not contain numbers in their Cells dictionary
+    c.) start block loop (for each block)
+        1.)check that all cells with length 1 have their value in the Blocks dictionary
+        2.) check that all cells do not contain numbers in their Blocks dictionary
+
+so a rough sudo code would look something like this (example is given of 1 and 2 for iteration inside the row loop
+
+if(cells[current].Length==1)  // step 1
+{
+    temp = cells[current].get(0);
+    if(! rows[currentRow].contains(temp))
+    {
+        rows[currentRow].push(temp);
+    }
+}
+
+for( each cell in this row    //step 2
+{
+    for( vals in rows[currentRow])
+    {
+        if(cell[i].contains(vel)&&cells[i].length>1)
+        {
+            cells[i].remove(val);
+        }
+    }
+}
+
+2nd approach
+
+looking at the obvious inefficiencies in the most basic approach we see that we will be iterating over these 2 steps 3 times.  There is no need to iterate through Cells 3 times.  If we use a table to hold the relationship between each cell and it's 3 supporting dictionaries (Rows, Cols, Blocks) then we can quickly update all dictionaries in the first loop.  The new data structure is as follows.
+
+5). Directory -> dictionary of arrays.  Each key is also a cell key.  Each value is an array holding keys to the supporting dictionaries.  They are arranged [Rows, Cols, Blocks].
+
+This cuts 2 full iterations of the cells keys (162 checks and their subsequent operations) off of each pass of the algorithm and it is now roughly 60% more efficient (your biggest gains in efficiency are by reducing loops or passes through part or all of the algorithm).  We did add about 40% more memory use with the extra dictionary but memory is cheap, use it.
+
+3Rd approach
+We can merge steps 1 and 2 into a single if else statement. 
+If(cell.length()==1) -> we make sure to update all supporting dictionaries
+else -> we update the cell from all of it's supporting dictionaries
+basically we are just extending what we did in the 2nd approach, by doing these we further reduce the number of loops and trade them for additional checks when we get a hit.
+
+4th approach
+we maintain a list of all unconfirmed cell keys (cells that we don't know what they contain yet).  Meaning we now have a vector that starts out holding all 81 keys as a key value hits length 1 we remove that key from the list of valid keys.  This will keep us from iterating over a key after we know we don't need it anymore meaning that as the program runs it will get faster.
+
+Now for a look at the main loop
+
+Variables we will be using:
+temp-> stores keys that are length 1 for removed from the validKeys at the end
+known-> the value that the cell is holding so we can update supporting dictionaries
+validKeys -> hols all cell keys that have not gone to length 1
+cells->dict of all cells in the puzzle
+current->the current cell key we are checking
+rows->dict of used values for each row
+cols->dict of used values for each column
+blocks->dict of used values for each block
+directory->dict of each supporting dict for a cell
+
+for(current in validKeys)
+{
+    vector temp;
+    if(cells[current].length==1)
+    {
+        known = cells[current].get(0);
+        if(!rows[directory[current].get(0)].contains(known))
+        {
+            rows[directory[current].get(0)].push(known);
+        }
+        if(!cols[directory[current].get(1)].contains(known))
+        {
+            cols[directory[current].get(1)].push(known);
+        }
+        if(!blocks[directory[current].get(2)].contains(known))
+        {
+            blocks[directory[current].get(2)].push(known);
+        }
+    temp.push(current);
+    }
+    else
+    {
+        for(val in rows[directory[current].get(0))
+        {
+            if(cells[current].contains(val))
+            {
+                cells[current].remove(val);
+            }
+        }
+        for(val in cols[directory[current].get(1))
+        {
+            if(cells[current].contains(val))
+            {
+                cells[current].remove(val);
+            }
+        }
+        for(val in blocks[directory[current].get(2))
+        {
+            if(cells[current].contains(val))
+            {
+                cells[current].remove(val);
+            }
+        }
+    }
+}
+
+This 4th version of hte original solution is what we will start coading with.  It's important to note that there are still alot of inefficiencies in this code and it will probably not account for all corner cases.  that being said it is important to get a project started, see progress, and fix errors in logic and assumption before trying to refine something too much.

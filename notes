@@ -125,4 +125,6 @@ for(current in validKeys)
     }
 }
 
-This 4th version of hte original solution is what we will start coading with.  It's important to note that there are still alot of inefficiencies in this code and it will probably not account for all corner cases.  that being said it is important to get a project started, see progress, and fix errors in logic and assumption before trying to refine something too much.
+This 4th version of the original solution is what we will start coading with.  It's important to note that there are still alot of inefficiencies in this code and it will probably not account for all corner cases.  that being said it is important to get a project started, see progress, and fix errors in logic and assumption before trying to refine something too much.
+
+Main.java was commited with only the basic read in and inits done.  we are still working on initilising the directory map.  thats where we will pick up next time.

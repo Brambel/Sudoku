@@ -87,14 +87,15 @@ public class Main {
 				//remember we still are not filling direct correctly.
 				keys.add(i+j);
 				cols_.put(j,new Vector<Integer>());
-				Integer[] temp = {i,j,i};
-				direct.put(i+j,temp);
-				//i=1;i<82
-				//{i%9,(i/10)*10,?}
+				
+				
 			}
 		}
 		Collections.sort(keys);
-		
+		//i=11;i<99 because we will be using keys to load direct
+		//{i%9,(i/10)*10,?}
+		Integer[] temp = {i,j,i};
+		direct.put(i+j,temp);
 		
 	}
 	public static void printPuzzle(Map<Integer, Vector<Integer>> cells_){

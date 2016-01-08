@@ -21,6 +21,7 @@ public class Main {
 		
 		initStructs(rows,cols,blocks,validKeys,directory);
 		readIn(cells, validKeys);
+		//testing directory vals
 		System.out.println(directory.get(19)[0]);
 		System.out.println(directory.get(19)[1]);
 		System.out.println(directory.get(19)[2]);
@@ -93,7 +94,7 @@ public class Main {
 		}
 		Collections.sort(keys);
 		//i=11;i<99 because we will be using keys to load direct
-		//{i%9,(i/10)*10,?}
+		//{i%10,i/10,[[[(i/10)-1]/3]*3]+[[[(i%10)-1]/3]+1]}
 		Integer[] temp = {i,j,i};
 		direct.put(i+j,temp);
 		

@@ -90,7 +90,7 @@ public class Main {
 				Integer[] temp = {i,j,i};
 				direct.put(i+j,temp);
 				//i=1;i<82
-				//{i%9,((i%10)+1)*10,?}
+				//{i%9,(i/10)*10,?}
 			}
 		}
 		Collections.sort(keys);

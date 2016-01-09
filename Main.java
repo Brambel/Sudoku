@@ -21,9 +21,9 @@ public class Main {
 		
 		initStructs(rows,cols,blocks,validKeys,directory);
 		readIn(cells, validKeys);
-		//solve puzzle here
-		for(int i=0;i<25;++i){	
-			solver(cells, rows, cols, blocks, directory, validKeys);
+		//change to see if it's solved rather then a set number of iterations
+		for(int i=0;i<20;++i){	
+			solver(cells, rows, cols, blocks, directory, validKeys);	
 		}
 		printPuzzle(cells);
 		
@@ -108,13 +108,12 @@ public class Main {
 			}
 			++i;
 		}
-		System.out.println("all done");
+		
 	}
 	public static void solver(Map<Integer, Vector<Integer>> cells_, Map<Integer, Vector<Integer>> rows_, Map<Integer, Vector<Integer>> cols_,
 			Map<Integer, Vector<Integer>> blocks_, 	Map<Integer,Integer[]> direct, List<Integer> validKeys){
 		
 		Vector<Integer> temp = new Vector<>();
-		
 		for(int i=0;i<validKeys.size();++i){
 			
 			Integer current = validKeys.get(i);
@@ -137,17 +136,18 @@ public class Main {
 		    if(cells_.get(current).size()>1){//we update cells based on their backing row, col, and block
 		        
 		    	for(Integer val : rows_.get(direct.get(current)[0])){
-		            while(cells_.get(current).contains(val)){
+		            if(cells_.get(current).contains(val)){
 		                cells_.get(current).remove(val);
 		            }
 		        }
+		    	
 		        for(Integer val : cols_.get(direct.get(current)[1])){
-		        	while(cells_.get(current).contains(val)){
+		        	if(cells_.get(current).contains(val)){
 		                cells_.get(current).remove(val);
 		            }
 		        }
 		        for(Integer val : blocks_.get(direct.get(current)[2])){
-		        	while(cells_.get(current).contains(val)){
+		        	if(cells_.get(current).contains(val)){
 		                cells_.get(current).remove(val);
 		            }
 		        }

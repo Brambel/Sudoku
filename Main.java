@@ -21,8 +21,12 @@ public class Main {
 		
 		initStructs(rows,cols,blocks,validKeys,directory);
 		readIn(cells, validKeys);
+		
+		
 		//solve puzzle here
-		solver(cells, rows, cols, blocks, directory, validKeys);
+		for(int i=0;i<20;++i){	
+			solver(cells, rows, cols, blocks, directory, validKeys);
+		}
 		printPuzzle(cells);
 		
 	}
@@ -99,8 +103,10 @@ public class Main {
 		Set<Integer> keys = cells_.keySet();
 		int i=1;
 		for(Integer k : keys){
-			if(!cells_.get(k).isEmpty()){
+			if(!cells_.get(k).isEmpty() && cells_.get(k).size()==1){
 				System.out.print(cells_.get(k).get(0));
+			}else{
+				System.out.print('-');
 			}
 			if(i%3==0){
 				System.out.print("\t");
@@ -120,20 +126,20 @@ public class Main {
 		for(int i=0;i<validKeys.size();++i){
 			
 			Integer current = validKeys.get(i);
-			if(cells_.get(current).size()==1){//check if the current cell has an answer 
+			if(cells_.get(current).size()==1){//update backing maps
 				Integer known = cells_.get(current).get(0);
-		        if(rows_.get(direct.get(current)[0]).isEmpty() || !rows_.get(direct.get(current)[0]).contains(known)){
-		            rows_.get(direct.get(current)[0]).add(known);;
+		        if(!rows_.get(direct.get(current)[0]).contains(known)){
+		            rows_.get(direct.get(current)[0]).add(known);
 		        }
-		        if(cols_.get(direct.get(current)[1])==null || !cols_.get(direct.get(current)[1]).contains(known)){
+		        if(!cols_.get(direct.get(current)[1]).contains(known)){
 		            cols_.get(direct.get(current)[1]).add(known);
 		        }
-		        if(blocks_.get(direct.get(current)[2]).isEmpty() || !blocks_.get(direct.get(current)[2]).contains(known)){
+		        if(!blocks_.get(direct.get(current)[2]).contains(known)){
 		            blocks_.get(direct.get(current)[2]).add(known);
 		        }
-		    temp.add(current); //keep track of keys to be removed
+		    temp.add(current); //keep track of known answers
 		    }
-		    /*else{//we update cells based on their backing row, col, and block
+		    else{//we update cells based on their backing row, col, and block
 		        
 		    	for(Integer val : rows_.get(direct.get(current)[0])){
 		            if(cells_.get(current).contains(val)){
@@ -150,7 +156,7 @@ public class Main {
 		                cells_.get(current).remove(val);
 		            }
 		        }
-		    }*/
+		    }
 		}
 		temp.forEach(x -> validKeys.remove(x));
 	}

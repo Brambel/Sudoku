@@ -21,10 +21,6 @@ public class Main {
 		
 		initStructs(rows,cols,blocks,validKeys,directory);
 		readIn(cells, validKeys);
-		//testing directory vals
-		System.out.println(directory.get(19)[0]);
-		System.out.println(directory.get(19)[1]);
-		System.out.println(directory.get(19)[2]);
 		printPuzzle(cells);
 		
 	}
@@ -65,7 +61,7 @@ public class Main {
 			}
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -85,18 +81,16 @@ public class Main {
 			
 			for(int j=10;j<100;j+=10){
 				//look at how everything can be built at once
-				//remember we still are not filling direct correctly.
 				keys.add(i+j);
-				cols_.put(j,new Vector<Integer>());
-				
-				
+				cols_.put(j,new Vector<Integer>());	
 			}
 		}
 		Collections.sort(keys);
-		//i=11;i<99 because we will be using keys to load direct
-		//{i%10,i/10,[[[(i/10)-1]/3]*3]+[[[(i%10)-1]/3]+1]}
-		Integer[] temp = {i,j,i};
-		direct.put(i+j,temp);
+		for(Integer x : keys){
+			Integer[] temp = {x%10,x/10,((((x/10)-1)/3)*3)+((((x%10)-1)/3)+1)};
+			direct.put(x,temp);
+		}
+		
 		
 	}
 	public static void printPuzzle(Map<Integer, Vector<Integer>> cells_){

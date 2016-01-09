@@ -21,6 +21,8 @@ public class Main {
 		
 		initStructs(rows,cols,blocks,validKeys,directory);
 		readIn(cells, validKeys);
+		//solve puzzle here
+		solver(cells, rows, cols, blocks, directory, validKeys);
 		printPuzzle(cells);
 		
 	}
@@ -87,7 +89,7 @@ public class Main {
 		}
 		Collections.sort(keys);
 		for(Integer x : keys){
-			Integer[] temp = {x%10,x/10,((((x/10)-1)/3)*3)+((((x%10)-1)/3)+1)};
+			Integer[] temp = {x%10,(x/10)*10,((((x/10)-1)/3)*3)+((((x%10)-1)/3)+1)};
 			direct.put(x,temp);
 		}
 		
@@ -109,5 +111,47 @@ public class Main {
 			++i;
 		}
 		System.out.println("all done");
+	}
+	public static void solver(Map<Integer, Vector<Integer>> cells_, Map<Integer, Vector<Integer>> rows_, Map<Integer, Vector<Integer>> cols_,
+			Map<Integer, Vector<Integer>> blocks_, 	Map<Integer,Integer[]> direct, List<Integer> validKeys){
+		
+		Vector<Integer> temp = new Vector<>();
+		
+		for(int i=0;i<validKeys.size();++i){
+			
+			Integer current = validKeys.get(i);
+			if(cells_.get(current).size()==1){//check if the current cell has an answer 
+				Integer known = cells_.get(current).get(0);
+		        if(rows_.get(direct.get(current)[0]).isEmpty() || !rows_.get(direct.get(current)[0]).contains(known)){
+		            rows_.get(direct.get(current)[0]).add(known);;
+		        }
+		        if(cols_.get(direct.get(current)[1])==null || !cols_.get(direct.get(current)[1]).contains(known)){
+		            cols_.get(direct.get(current)[1]).add(known);
+		        }
+		        if(blocks_.get(direct.get(current)[2]).isEmpty() || !blocks_.get(direct.get(current)[2]).contains(known)){
+		            blocks_.get(direct.get(current)[2]).add(known);
+		        }
+		    temp.add(current); //keep track of keys to be removed
+		    }
+		    /*else{//we update cells based on their backing row, col, and block
+		        
+		    	for(Integer val : rows_.get(direct.get(current)[0])){
+		            if(cells_.get(current).contains(val)){
+		                cells_.get(current).remove(val);
+		            }
+		        }
+		        for(Integer val : cols_.get(direct.get(current)[1])){
+		            if(cells_.get(current).contains(val)){
+		                cells_.get(current).remove(val);
+		            }
+		        }
+		        for(Integer val : blocks_.get(direct.get(current)[2])){
+		            if(cells_.get(current).contains(val)){
+		                cells_.get(current).remove(val);
+		            }
+		        }
+		    }*/
+		}
+		temp.forEach(x -> validKeys.remove(x));
 	}
 }

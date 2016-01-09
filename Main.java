@@ -21,10 +21,8 @@ public class Main {
 		
 		initStructs(rows,cols,blocks,validKeys,directory);
 		readIn(cells, validKeys);
-		
-		
 		//solve puzzle here
-		for(int i=0;i<20;++i){	
+		for(int i=0;i<25;++i){	
 			solver(cells, rows, cols, blocks, directory, validKeys);
 		}
 		printPuzzle(cells);
@@ -70,12 +68,6 @@ public class Main {
 
 			e.printStackTrace();
 		}
-		
-		
-		
-			
-		
-
 	}
 	//inits all other structs to start values
 	public static void initStructs(Map<Integer,Vector<Integer>> rows_, Map<Integer,Vector<Integer>> cols_,
@@ -139,20 +131,23 @@ public class Main {
 		        }
 		    temp.add(current); //keep track of known answers
 		    }
-		    else{//we update cells based on their backing row, col, and block
+		}
+		for(int i=0;i<validKeys.size();++i){
+			Integer current = validKeys.get(i);
+		    if(cells_.get(current).size()>1){//we update cells based on their backing row, col, and block
 		        
 		    	for(Integer val : rows_.get(direct.get(current)[0])){
-		            if(cells_.get(current).contains(val)){
+		            while(cells_.get(current).contains(val)){
 		                cells_.get(current).remove(val);
 		            }
 		        }
 		        for(Integer val : cols_.get(direct.get(current)[1])){
-		            if(cells_.get(current).contains(val)){
+		        	while(cells_.get(current).contains(val)){
 		                cells_.get(current).remove(val);
 		            }
 		        }
 		        for(Integer val : blocks_.get(direct.get(current)[2])){
-		            if(cells_.get(current).contains(val)){
+		        	while(cells_.get(current).contains(val)){
 		                cells_.get(current).remove(val);
 		            }
 		        }

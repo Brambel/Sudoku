@@ -128,3 +128,7 @@ for(current in validKeys)
 This 4th version of the original solution is what we will start coading with.  It's important to note that there are still alot of inefficiencies in this code and it will probably not account for all corner cases.  that being said it is important to get a project started, see progress, and fix errors in logic and assumption before trying to refine something too much.
 
 Main.java was commited with only the basic read in and inits done.  we are still working on initilising the directory map.  thats where we will pick up next time.
+
+The program now has most of it's basic functionality (which is everything coverd in the notes thus far).  The problem with obviously wrong puzzles turned out to be bad input.
+
+right now the program finishes not by checking if the puzzle is solved but just runs a specific number of iterations of the solver function.  Next stream we will modify the program so it stops solving the puzzle onces the puzzle is complete (also checking that we are not working on an unsolvable puzzle).

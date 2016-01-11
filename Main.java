@@ -22,10 +22,20 @@ public class Main {
 		initStructs(rows,cols,blocks,validKeys,directory);
 		readIn(cells, validKeys);
 		//change to see if it's solved rather then a set number of iterations
-		for(int i=0;i<20;++i){	
-			solver(cells, rows, cols, blocks, directory, validKeys);	
+		
+		int i=0;
+		while(solver(cells, rows, cols, blocks, directory, validKeys)){
+			++i;
 		}
+		//check if puzzle is solved
+		
+		if(validKeys.size()> 0){
+			System.out.println("puzzle unsolved");
+			System.out.println(i);
+		}
+		//print puzzle
 		printPuzzle(cells);
+		
 		
 	}
 	//reads in given values of puzzle and fills cells 
@@ -34,12 +44,13 @@ public class Main {
 		
 		try {
 			String rawInput = "";
-			for (String line : Files.readAllLines(Paths.get("puzzle.txt"))) {
+			for (String line : Files.readAllLines(Paths.get("puzzleHard.txt"))) {
 			    rawInput+=line;
 			}
-			
+			//find way to remove spaces
 			rawInput = rawInput.replaceAll("\t", "");
 			rawInput = rawInput.replaceAll("\r","");
+			rawInput = rawInput.replaceAll(" ","");
 			
 			char[] input = rawInput.toCharArray();
 			Iterator<Integer> current = keys.iterator();
@@ -110,14 +121,16 @@ public class Main {
 		}
 		
 	}
-	public static void solver(Map<Integer, Vector<Integer>> cells_, Map<Integer, Vector<Integer>> rows_, Map<Integer, Vector<Integer>> cols_,
+	public static boolean solver(Map<Integer, Vector<Integer>> cells_, Map<Integer, Vector<Integer>> rows_, Map<Integer, Vector<Integer>> cols_,
 			Map<Integer, Vector<Integer>> blocks_, 	Map<Integer,Integer[]> direct, List<Integer> validKeys){
 		
 		Vector<Integer> temp = new Vector<>();
+		boolean changed=false;
 		for(int i=0;i<validKeys.size();++i){
 			
 			Integer current = validKeys.get(i);
 			if(cells_.get(current).size()==1){//update backing maps
+				changed=true;
 				Integer known = cells_.get(current).get(0);
 		        if(!rows_.get(direct.get(current)[0]).contains(known)){
 		            rows_.get(direct.get(current)[0]).add(known);
@@ -132,6 +145,7 @@ public class Main {
 		    }
 		}
 		for(int i=0;i<validKeys.size();++i){
+			
 			Integer current = validKeys.get(i);
 		    if(cells_.get(current).size()>1){//we update cells based on their backing row, col, and block
 		        
@@ -154,5 +168,7 @@ public class Main {
 		    }
 		}
 		temp.forEach(x -> validKeys.remove(x));
+		return changed;
 	}
+}
 }
